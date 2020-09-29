@@ -1,5 +1,6 @@
 Player player;
 Enemy[] enemies;
+Bullet[] bullets; 
 int numberOfEnemys = 5;
 float deltaTime;
 long time;
@@ -15,6 +16,8 @@ void setup()
 	{
 		enemies[i] = new Enemy(50 + (i*50), 50, 30,1);
 	}
+
+	bullets = new Bullet[10];
 }
 
 void draw()

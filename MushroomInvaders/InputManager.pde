@@ -8,6 +8,22 @@ void keyPressed()
       moveLeft = true;
     else if (keyCode == RIGHT || key == 'd')
       moveRight = true;
+
+     //Spawn new bullet it we press "space-bar"
+  if (keyPressed && key == 32) 
+{  
+      //Find empty spot in array, create list.
+      for (int i = 0; i < bullets.length; i++) {
+        if (bullets[i] == null) {
+          bullets[i] = new Bullet(player.position.x, player.position.y, 5);
+          
+          //we are done, break/quit the loop.
+          break;
+
+        }
+      }
+}
+
 }
 
 void keyReleased()

@@ -1,16 +1,19 @@
 class Bullet extends GameObject
 
 {
-Bullet[] bullets; 
-
- Bullet(float x, float y) 
+ Bullet(float x, float y, int size) 
 {
-  bullets = new Bullet[10];
+
+ super(x, y, size);
+ position.x = x;
+ position.y = y;
+ this.size = size;
+
 }
 
 void draw() {
   //Update bullets
-  for (int i = 0; bullets.length; i++) {
+  for (int i = 0; i < bullets.length; i++) {
     if (bullets[i] == null) {
       //No bullet, skip to the next one.
       continue;
@@ -21,16 +24,5 @@ void draw() {
     }
   }
 
-  //Spawn new bullet it we press "space-bar"
-  if (keyPressed && key == 32) {  
-      //Find empty spot in array, create list.
-      for (int i = 0; bullets.length; i++) {
-        if (bullets[i] == null) {
-          bullets[i] = new Bullet(player.position);
-          //we are done, break/quit the loop.
-          break;
-        }
-      }
-  }
-}
+ }
 }

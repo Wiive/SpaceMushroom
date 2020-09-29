@@ -16,6 +16,7 @@ public class MushroomInvaders extends PApplet {
 
 Player player;
 Enemy[] enemies;
+Bullet[] bullets; 
 int numberOfEnemys = 5;
 float deltaTime;
 long time;
@@ -31,6 +32,8 @@ public void setup()
 	{
 		enemies[i] = new Enemy(50 + (i*50), 50, 30,1);
 	}
+
+	bullets = new Bullet[10];
 }
 
 public void draw()
@@ -52,6 +55,34 @@ public void draw()
 
 
 	time = currentTime;
+}
+class Bullet extends GameObject
+
+{
+ Bullet(float x, float y, int size) 
+{
+
+ super(x, y, size);
+ position.x = x;
+ position.y = y;
+ this.size = size;
+
+}
+
+public void draw() {
+  //Update bullets
+  for (int i = 0; i < bullets.length; i++) {
+    if (bullets[i] == null) {
+      //No bullet, skip to the next one.
+      continue;
+    }
+    else
+    {
+      //found a bullet, update it.
+    }
+  }
+
+ }
 }
 class Enemy extends GameObject
 {
@@ -138,6 +169,22 @@ public void keyPressed()
       moveLeft = true;
     else if (keyCode == RIGHT || key == 'd')
       moveRight = true;
+
+     //Spawn new bullet it we press "space-bar"
+  if (keyPressed && key == 32) 
+{  
+      //Find empty spot in array, create list.
+      for (int i = 0; i < bullets.length; i++) {
+        if (bullets[i] == null) {
+          bullets[i] = new Bullet(player.position.x, player.position.y, 5);
+          
+          //we are done, break/quit the loop.
+          break;
+
+        }
+      }
+}
+
 }
 
 public void keyReleased()
