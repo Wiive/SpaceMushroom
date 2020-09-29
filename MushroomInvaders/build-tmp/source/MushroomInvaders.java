@@ -86,9 +86,11 @@ public void draw() {
 }
 class Enemy extends GameObject
 {
-	float horizontalSpeed = 20;
-	float verticalSpeed = 20;
+	float horizontalSpeed = 50;
+	float verticalSpeed = 100;
 	boolean hitScreenWall;
+	boolean moveLeft = false;
+	boolean moveRight = true;
 
 	int scoreValue;
 	int scoreTier1 = 10;
@@ -126,14 +128,24 @@ class Enemy extends GameObject
 	{
 		position.x = position.x + horizontalSpeed * deltaTime;
 		if(position.x < size || position.x > width - size)
-		hitScreenWall = true;
+			hitScreenWall = true;
+
 		if(hitScreenWall)
 		{
-			print("Hitted wall");
-			horizontalSpeed = horizontalSpeed * -1;
-			position.y = position.y + verticalSpeed * deltaTime;
-			hitScreenWall = false;
+			print("Hit wall ");		
+			for(int i = 0; i < numberOfEnemys; ++i)
+			{
+				enemies[i].horizontalSpeed = horizontalSpeed * -1;
+				print(horizontalSpeed + " ");
+				for(int j = 0; j < numberOfEnemys; ++j)
+				{
+					enemies[i].position.y = position.y + verticalSpeed;
+				
+				}	
+			}	
+		 	hitScreenWall = false;
 		}
+
 
 	
 	}
