@@ -4,6 +4,7 @@ class Enemy extends GameObject
 	float verticalSpeed = 50;
 	boolean hitScreenWall;
 	boolean swapDirection;
+	int shootingEnemy;
 
 	int scoreValue;
 	int scoreTier1 = 10;
@@ -60,8 +61,17 @@ class Enemy extends GameObject
 			}				
 		 	swapDirection = false;
 		}	
+		
 		checkCollision();
-		enemyShoot();
+
+		if(enemyShootCooldown <= 0)
+		{
+			enemyShootCooldown = random(3,4);
+			shootingEnemy = int(random(enemies.length));
+			enemyShoot();
+			print(" Shooting Enemy Index: " + shootingEnemy);
+			print(" Enemy Shoot Cooldown: " + enemyShootCooldown);
+		}
 	}
 
 	void draw()
@@ -95,18 +105,18 @@ class Enemy extends GameObject
 
 	void enemyShoot()
 	{  
-		for(int i = 0; i < enemies.length; ++i)
-		{
+		//for(int i = 0; i < enemies.length; ++i)
+		//{
 			for (int j = 0; j < bullets.length; j++)
-     	{
-        	if (bullets[j] == null)
-        	{
-         	 	bullets[j] = new Bullet(enemies[i].position.x, enemies[i].position.y, 10, "enemyBullet");
+     		{
+	        	if (bullets[j] == null)
+	        	{
+	         	 	bullets[j] = new Bullet(enemies[shootingEnemy].position.x, enemies[shootingEnemy].position.y, 10, "enemyBullet");
 
-        		break;
-      		}	
-    	}
-		}
+	        		break;
+	      		}	
+    		}
+		//}
 		
 	}
 }

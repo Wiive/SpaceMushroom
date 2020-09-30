@@ -47,6 +47,7 @@ class Player extends GameObject
 		position.add(move);
 
 		ScreenWall();
+		checkCollision();
 	}
 
 	void draw()
@@ -61,6 +62,25 @@ class Player extends GameObject
 			position.x = size;
 		else if (position.x > width - size)
 			position.x = width -size;	
+	}
+
+
+	void checkCollision()
+	{
+		
+			for(int i = 0; i < bullets.length; ++i)
+				if(bullets[i] != null)
+				{
+					if(bulletCollision(player, bullets[i]))
+					{
+						if (bullets[i].typeOfBullet == "enemyBullet") 
+						{					
+						bullets[i] = null;
+						print("GAME OVER");
+						}
+					}
+				}
+		
 	}
 
 }

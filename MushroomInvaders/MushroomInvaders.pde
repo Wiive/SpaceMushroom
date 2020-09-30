@@ -4,6 +4,7 @@ Bullet[] bullets;
 int numberOfEnemies = 30;
 float deltaTime;
 long time;
+float enemyShootCooldown;
 int score = 0;
 String scoreText = "Current Score: ";
 
@@ -35,6 +36,7 @@ void setup()
 	}
 
 	bullets = new Bullet[30];
+	float enemyShootCooldown = random(3,4);
 }
 
 void draw()
@@ -44,6 +46,8 @@ void draw()
 	text(scoreText + score, width/2,30);
 
 	long currentTime = millis();
+	enemyShootCooldown = enemyShootCooldown - deltaTime;
+	
 	deltaTime = (currentTime - time);
 	deltaTime *= 0.001f;
 

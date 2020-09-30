@@ -20,6 +20,7 @@ Bullet[] bullets;
 int numberOfEnemies = 30;
 float deltaTime;
 long time;
+float enemyShootCooldown;
 int score = 0;
 String scoreText = "Current Score: ";
 
@@ -51,6 +52,7 @@ public void setup()
 	}
 
 	bullets = new Bullet[30];
+	float enemyShootCooldown = random(3,4);
 }
 
 public void draw()
@@ -60,6 +62,8 @@ public void draw()
 	text(scoreText + score, width/2,30);
 
 	long currentTime = millis();
+	enemyShootCooldown = enemyShootCooldown - deltaTime;
+	
 	deltaTime = (currentTime - time);
 	deltaTime *= 0.001f;
 
@@ -92,7 +96,7 @@ class Bullet extends GameObject
    position.x = x;
    position.y = y;
    this.size = size;
-   // "pnemybullet" "playberBullet"
+   //We use the strings "enemyBullet" && "playberBullet"
    this.typeOfBullet = typeOfBullet;
    objectColor = color(255);
   }
@@ -120,7 +124,13 @@ class Bullet extends GameObject
         //update bullet...
         fill(objectColor);
         rect(position.x, position.y, size, size*3);
+
+        //Remove bullets out of screen
         if(bullets[i].position.y < 0)
+        {
+           bullets[i] = null;
+        }
+        if(bullets[i].position.y > height)
         {
            bullets[i] = null;
         }
@@ -151,6 +161,7 @@ class Enemy extends GameObject
 	float verticalSpeed = 50;
 	boolean hitScreenWall;
 	boolean swapDirection;
+	int shootingEnemy;
 
 	int scoreValue;
 	int scoreTier1 = 10;
@@ -207,8 +218,17 @@ class Enemy extends GameObject
 			}				
 		 	swapDirection = false;
 		}	
+		
 		checkCollision();
-		enemyShoot();
+
+		if(enemyShootCooldown <= 0)
+		{
+			enemyShootCooldown = random(3,4);
+			shootingEnemy = PApplet.parseInt(random(enemies.length));
+			enemyShoot();
+			print(" Shooting Enemy Index: " + shootingEnemy);
+			print(" Enemy Shoot Cooldown: " + enemyShootCooldown);
+		}
 	}
 
 	public void draw()
@@ -242,18 +262,18 @@ class Enemy extends GameObject
 
 	public void enemyShoot()
 	{  
-		for(int i = 0; i < enemies.length; ++i)
-		{
+		//for(int i = 0; i < enemies.length; ++i)
+		//{
 			for (int j = 0; j < bullets.length; j++)
-     	{
-        	if (bullets[j] == null)
-        	{
-         	 	bullets[j] = new Bullet(enemies[i].position.x, enemies[i].position.y, 10, "enemyBullet");
+     		{
+	        	if (bullets[j] == null)
+	        	{
+	         	 	bullets[j] = new Bullet(enemies[shootingEnemy].position.x, enemies[shootingEnemy].position.y, 10, "enemyBullet");
 
-        		break;
-      		}	
-    	}
-		}
+	        		break;
+	      		}	
+    		}
+		//}
 		
 	}
 }
@@ -368,6 +388,7 @@ class Player extends GameObject
 		position.add(move);
 
 		ScreenWall();
+		checkCollision();
 	}
 
 	public void draw()
@@ -382,6 +403,25 @@ class Player extends GameObject
 			position.x = size;
 		else if (position.x > width - size)
 			position.x = width -size;	
+	}
+
+
+	public void checkCollision()
+	{
+		
+			for(int i = 0; i < bullets.length; ++i)
+				if(bullets[i] != null)
+				{
+					if(bulletCollision(player, bullets[i]))
+					{
+						if (bullets[i].typeOfBullet == "enemyBullet") 
+						{					
+						bullets[i] = null;
+						print("GAME OVER");
+						}
+					}
+				}
+		
 	}
 
 }

@@ -10,7 +10,7 @@ class Bullet extends GameObject
    position.x = x;
    position.y = y;
    this.size = size;
-   // "pnemybullet" "playberBullet"
+   //We use the strings "enemyBullet" && "playberBullet"
    this.typeOfBullet = typeOfBullet;
    objectColor = color(255);
   }
@@ -38,7 +38,13 @@ class Bullet extends GameObject
         //update bullet...
         fill(objectColor);
         rect(position.x, position.y, size, size*3);
+
+        //Remove bullets out of screen
         if(bullets[i].position.y < 0)
+        {
+           bullets[i] = null;
+        }
+        if(bullets[i].position.y > height)
         {
            bullets[i] = null;
         }
