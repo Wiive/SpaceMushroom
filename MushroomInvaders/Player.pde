@@ -1,11 +1,11 @@
 class Player extends GameObject
 {
-	float speed = 30;
-	float maxSpeed = 50;
+	float speed = 20;
+	float maxSpeed = 30;
 	PVector acceleration;
-	float quickTurnSpeed = 100;
-	float accelerationMultiplier = 0.85;
-	float deaccelerationMultiplier = 0.6;
+	float quickTurnSpeed = 200;
+	float accelerationMultiplier = 2;
+	float deaccelerationMultiplier = 1.5;
 
 
 	Player(float x, float y, int size,int value1, int value2, int value3)

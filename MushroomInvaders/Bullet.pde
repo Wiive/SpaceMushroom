@@ -8,6 +8,8 @@ class Bullet extends GameObject
  position.x = x;
  position.y = y;
  this.size = size;
+ 
+
 
 }
 

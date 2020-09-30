@@ -66,6 +66,8 @@ class Bullet extends GameObject
  position.x = x;
  position.y = y;
  this.size = size;
+ 
+
 
 }
 
@@ -212,12 +214,12 @@ public PVector input()
 }
 class Player extends GameObject
 {
-	float speed = 30;
-	float maxSpeed = 50;
+	float speed = 20;
+	float maxSpeed = 30;
 	PVector acceleration;
-	float quickTurnSpeed = 100;
-	float accelerationMultiplier = 0.85f;
-	float deaccelerationMultiplier = 0.6f;
+	float quickTurnSpeed = 200;
+	float accelerationMultiplier = 2;
+	float deaccelerationMultiplier = 1.5f;
 
 
 	Player(float x, float y, int size,int value1, int value2, int value3)
