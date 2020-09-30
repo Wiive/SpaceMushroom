@@ -34,7 +34,7 @@ void setup()
 		}
 	}
 
-	bullets = new Bullet[20];
+	bullets = new Bullet[30];
 }
 
 void draw()

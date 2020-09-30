@@ -1,19 +1,30 @@
 class Bullet extends GameObject
 {
   int speed = 260;
+  String typeOfBullet;
+  
 
-  Bullet(float x, float y, int size) 
+  Bullet(float x, float y, int size, String typeOfBullet) 
   {
    super(x, y, size);
    position.x = x;
    position.y = y;
    this.size = size;
+   // "pnemybullet" "playberBullet"
+   this.typeOfBullet = typeOfBullet;
    objectColor = color(255);
   }
 
   void draw()
   {
-    position.y = position.y - speed * deltaTime;
+    if (typeOfBullet == "playerBullet") 
+      {
+        position.y = position.y - speed * deltaTime;
+      }
+    else 
+    {
+      position.y = position.y + speed * deltaTime;
+    }
   //Update bullets
     for (int i = 0; i < bullets.length; i++)
     {

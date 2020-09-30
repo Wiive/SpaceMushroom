@@ -17,28 +17,47 @@ public class MushroomInvaders extends PApplet {
 Player player;
 Enemy[] enemies;
 Bullet[] bullets; 
-int numberOfEnemys = 5;
+int numberOfEnemies = 30;
 float deltaTime;
 long time;
+int score = 0;
+String scoreText = "Current Score: ";
+
 
 public void setup()
 {
 	
 	frameRate(60);
+	textAlign(CENTER);
+	ellipseMode(CENTER);
 
 	player = new Player(400,850,30,200,100,150);
-	enemies = new Enemy[numberOfEnemys];
-	for (int i = 0; i < numberOfEnemys; ++i)
+
+	enemies = new Enemy[numberOfEnemies];
+	for (int i = 0; i < numberOfEnemies; ++i)
 	{
-		enemies[i] = new Enemy(50 + (i*50), 50, 30,1);
+		if(i < 10)
+		{
+		enemies[i] = new Enemy(50 + (i*50), height/6, 25,1);
+		}
+		if(i >= 10)
+		{			
+			enemies[i] = new Enemy(50 + ((i-10)*50), height/8, 25,2);
+		}
+		if(i >= 20)
+		{			
+			enemies[i] = new Enemy(50 + ((i-20)*50), height/12, 25,3);
+		}
 	}
 
-	bullets = new Bullet[10];
+	bullets = new Bullet[30];
 }
 
 public void draw()
 {
 	background(0);
+	textSize(28);
+	text(scoreText + score, width/2,30);
 
 	long currentTime = millis();
 	deltaTime = (currentTime - time);
@@ -53,46 +72,85 @@ public void draw()
 		enemies[i].draw();
 	}
 
+	for(int i = 0; i < bullets.length; ++i)
+	{
+		if(bullets[i] != null)
+		bullets[i].draw();
+	}
 
 	time = currentTime;
 }
 class Bullet extends GameObject
-
 {
- Bullet(float x, float y, int size) 
-{
+  int speed = 260;
+  String typeOfBullet;
+  
 
- super(x, y, size);
- position.x = x;
- position.y = y;
- this.size = size;
- 
-
-
-}
-
-public void draw() {
-  //Update bullets
-  for (int i = 0; i < bullets.length; i++) {
-    if (bullets[i] == null) {
-      //No bullet, skip to the next one.
-      continue;
-    }
-    else
-    {
-      //found a bullet, update it.
-    }
+  Bullet(float x, float y, int size, String typeOfBullet) 
+  {
+   super(x, y, size);
+   position.x = x;
+   position.y = y;
+   this.size = size;
+   // "pnemybullet" "playberBullet"
+   this.typeOfBullet = typeOfBullet;
+   objectColor = color(255);
   }
 
- }
+  public void draw()
+  {
+    if (typeOfBullet == "playerBullet") 
+      {
+        position.y = position.y - speed * deltaTime;
+      }
+    else 
+    {
+      position.y = position.y + speed * deltaTime;
+    }
+  //Update bullets
+    for (int i = 0; i < bullets.length; i++)
+    {
+     if (bullets[i] == null)
+      {
+      //No bullet, skip to the next one.
+      continue;
+      }
+      else
+      {
+        //update bullet...
+        fill(objectColor);
+        rect(position.x, position.y, size, size*3);
+        if(bullets[i].position.y < 0)
+        {
+           bullets[i] = null;
+        }
+      }
+    }
+  }
+}
+ public boolean bulletCollision(GameObject one, Bullet two)
+ { 
+  int maxDistance = one.size/2 + two.size;
+
+  if(abs(one.position.x - two.position.x) > maxDistance || abs(one.position.y - two.position.y) > maxDistance)
+  {
+    return false;
+  }
+  else if(dist(one.position.x, one.position.y, two.position.x, two.position.y) > maxDistance)
+  {
+    return false;
+  }
+  else
+  {
+    return true;
+  }
 }
 class Enemy extends GameObject
 {
-	float horizontalSpeed = 50;
-	float verticalSpeed = 100;
+	float horizontalSpeed = 80;
+	float verticalSpeed = 50;
 	boolean hitScreenWall;
-	boolean moveLeft = false;
-	boolean moveRight = true;
+	boolean swapDirection;
 
 	int scoreValue;
 	int scoreTier1 = 10;
@@ -129,27 +187,28 @@ class Enemy extends GameObject
 	public void update()
 	{
 		position.x = position.x + horizontalSpeed * deltaTime;
+		
 		if(position.x < size || position.x > width - size)
-			hitScreenWall = true;
-
-		if(hitScreenWall)
 		{
-			print("Hit wall ");		
-			for(int i = 0; i < numberOfEnemys; ++i)
-			{
-				enemies[i].horizontalSpeed = horizontalSpeed * -1;
-				print(horizontalSpeed + " ");
-				for(int j = 0; j < numberOfEnemys; ++j)
-				{
-					enemies[i].position.y = position.y + verticalSpeed;
-				
-				}	
-			}	
-		 	hitScreenWall = false;
+			hitScreenWall = true;
+			swapDirection = true;
 		}
+		else hitScreenWall = false;
 
-
-	
+		if(swapDirection)
+		{
+			
+			//print("Hit wall ");		
+			for(int i = 0; i < enemies.length; ++i)
+			{
+				enemies[i].horizontalSpeed = enemies[i].horizontalSpeed * -1;
+				enemies[i].position.y = enemies[i].position.y + verticalSpeed;
+				//print(horizontalSpeed + " ");		
+			}				
+		 	swapDirection = false;
+		}	
+		checkCollision();
+		enemyShoot();
 	}
 
 	public void draw()
@@ -159,6 +218,44 @@ class Enemy extends GameObject
 	}
 
 
+	public void checkCollision()
+	{
+		for(int i = 0; i < enemies.length; ++i)
+		{
+			for(int j = 0; j < bullets.length; ++j)
+				if(bullets[j] != null)
+				{
+					if(bulletCollision(enemies[i], bullets[j]))
+					{
+						if (bullets[j].typeOfBullet == "playerBullet") 
+						{
+						print("DOM TRÄFFA");
+						bullets[j] = null;
+						enemies[i].horizontalSpeed = 0; 
+						enemies[i].position.y = -1000;
+						score = score + enemies[i].scoreValue;	
+						}
+					}
+				}
+		}
+	}
+
+	public void enemyShoot()
+	{  
+		for(int i = 0; i < enemies.length; ++i)
+		{
+			for (int j = 0; j < bullets.length; j++)
+     	{
+        	if (bullets[j] == null)
+        	{
+         	 	bullets[j] = new Bullet(enemies[i].position.x, enemies[i].position.y, 10, "enemyBullet");
+
+        		break;
+      		}	
+    	}
+		}
+		
+	}
 }
 class GameObject
 {
@@ -170,7 +267,6 @@ class GameObject
 	GameObject(float x, float y, int size)
 	{
 		position = new PVector(x,y);
-
 	}
 }
 boolean moveLeft;
@@ -185,20 +281,19 @@ public void keyPressed()
       moveRight = true;
 
      //Spawn new bullet it we press "space-bar"
-  if (keyPressed && key == 32) 
-{  
+    if (keyPressed && key == 32) 
+    {  
       //Find empty spot in array, create list.
-      for (int i = 0; i < bullets.length; i++) {
-        if (bullets[i] == null) {
-          bullets[i] = new Bullet(player.position.x, player.position.y, 5);
-          
+      for (int i = 0; i < bullets.length; i++)
+      {
+        if (bullets[i] == null)
+        {
+          bullets[i] = new Bullet(player.position.x, player.position.y, 10, "playerBullet");
           //we are done, break/quit the loop.
           break;
-
         }
       }
-}
-
+    } 
 }
 
 public void keyReleased()

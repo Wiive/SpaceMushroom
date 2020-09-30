@@ -17,7 +17,7 @@ void keyPressed()
       {
         if (bullets[i] == null)
         {
-          bullets[i] = new Bullet(player.position.x, player.position.y, 10);   
+          bullets[i] = new Bullet(player.position.x, player.position.y, 10, "playerBullet");
           //we are done, break/quit the loop.
           break;
         }

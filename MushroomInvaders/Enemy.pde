@@ -61,6 +61,7 @@ class Enemy extends GameObject
 		 	swapDirection = false;
 		}	
 		checkCollision();
+		enemyShoot();
 	}
 
 	void draw()
@@ -79,14 +80,33 @@ class Enemy extends GameObject
 				{
 					if(bulletCollision(enemies[i], bullets[j]))
 					{
+						if (bullets[j].typeOfBullet == "playerBullet") 
+						{
 						print("DOM TRÄFFA");
 						bullets[j] = null;
-						enemies[i].horizontalSpeed = 0;
+						enemies[i].horizontalSpeed = 0; 
 						enemies[i].position.y = -1000;
-						score = score + enemies[i].scoreValue;
+						score = score + enemies[i].scoreValue;	
+						}
 					}
 				}
 		}
 	}
 
+	void enemyShoot()
+	{  
+		for(int i = 0; i < enemies.length; ++i)
+		{
+			for (int j = 0; j < bullets.length; j++)
+     	{
+        	if (bullets[j] == null)
+        	{
+         	 	bullets[j] = new Bullet(enemies[i].position.x, enemies[i].position.y, 10, "enemyBullet");
+
+        		break;
+      		}	
+    	}
+		}
+		
+	}
 }
