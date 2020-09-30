@@ -8,6 +8,5 @@ class GameObject
 	GameObject(float x, float y, int size)
 	{
 		position = new PVector(x,y);
-
 	}
 }

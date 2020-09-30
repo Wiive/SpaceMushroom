@@ -1,10 +1,9 @@
 class Enemy extends GameObject
 {
-	float horizontalSpeed = 50;
-	float verticalSpeed = 100;
+	float horizontalSpeed = 80;
+	float verticalSpeed = 50;
 	boolean hitScreenWall;
-	boolean moveLeft = false;
-	boolean moveRight = true;
+	boolean swapDirection;
 
 	int scoreValue;
 	int scoreTier1 = 10;
@@ -41,24 +40,27 @@ class Enemy extends GameObject
 	void update()
 	{
 		position.x = position.x + horizontalSpeed * deltaTime;
+		
 		if(position.x < size || position.x > width - size)
-			hitScreenWall = true;
-
-		if(hitScreenWall)
 		{
-			print("Hit wall ");		
-			for(int i = 0; i < numberOfEnemys; ++i)
-			{
-				enemies[i].horizontalSpeed = horizontalSpeed * -1;
-				enemies[i].position.y = position.y + verticalSpeed;
-				print(horizontalSpeed + " ");
-
-			}	
-		 	hitScreenWall = false;
+			hitScreenWall = true;
+			swapDirection = true;
 		}
+		else hitScreenWall = false;
 
-
-	
+		if(swapDirection)
+		{
+			
+			//print("Hit wall ");		
+			for(int i = 0; i < enemies.length; ++i)
+			{
+				enemies[i].horizontalSpeed = enemies[i].horizontalSpeed * -1;
+				enemies[i].position.y = enemies[i].position.y + verticalSpeed;
+				//print(horizontalSpeed + " ");		
+			}				
+		 	swapDirection = false;
+		}	
+		checkCollision();
 	}
 
 	void draw()
@@ -67,5 +69,24 @@ class Enemy extends GameObject
 		ellipse(position.x, position.y, size, size);
 	}
 
+
+	void checkCollision()
+	{
+		for(int i = 0; i < enemies.length; ++i)
+		{
+			for(int j = 0; j < bullets.length; ++j)
+				if(bullets[j] != null)
+				{
+					if(bulletCollision(enemies[i], bullets[j]))
+					{
+						print("DOM TRÄFFA");
+						bullets[j] = null;
+						enemies[i].horizontalSpeed = 0;
+						enemies[i].position.y = -1000;
+						score = score + enemies[i].scoreValue;
+					}
+				}
+		}
+	}
 
 }

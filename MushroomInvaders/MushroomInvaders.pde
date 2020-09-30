@@ -1,28 +1,47 @@
 Player player;
 Enemy[] enemies;
 Bullet[] bullets; 
-int numberOfEnemys = 5;
+int numberOfEnemies = 30;
 float deltaTime;
 long time;
+int score = 0;
+String scoreText = "Current Score: ";
+
 
 void setup()
 {
 	size(800,1000);
 	frameRate(60);
+	textAlign(CENTER);
+	ellipseMode(CENTER);
 
 	player = new Player(400,850,30,200,100,150);
-	enemies = new Enemy[numberOfEnemys];
-	for (int i = 0; i < numberOfEnemys; ++i)
+
+	enemies = new Enemy[numberOfEnemies];
+	for (int i = 0; i < numberOfEnemies; ++i)
 	{
-		enemies[i] = new Enemy(50 + (i*50), 50, 30,1);
+		if(i < 10)
+		{
+		enemies[i] = new Enemy(50 + (i*50), height/6, 25,1);
+		}
+		if(i >= 10)
+		{			
+			enemies[i] = new Enemy(50 + ((i-10)*50), height/8, 25,2);
+		}
+		if(i >= 20)
+		{			
+			enemies[i] = new Enemy(50 + ((i-20)*50), height/12, 25,3);
+		}
 	}
 
-	bullets = new Bullet[10];
+	bullets = new Bullet[20];
 }
 
 void draw()
 {
 	background(0);
+	textSize(28);
+	text(scoreText + score, width/2,30);
 
 	long currentTime = millis();
 	deltaTime = (currentTime - time);
@@ -37,6 +56,11 @@ void draw()
 		enemies[i].draw();
 	}
 
+	for(int i = 0; i < bullets.length; ++i)
+	{
+		if(bullets[i] != null)
+		bullets[i].draw();
+	}
 
 	time = currentTime;
 }
