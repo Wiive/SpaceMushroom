@@ -17,7 +17,8 @@ public class MushroomInvaders extends PApplet {
 Player player;
 Enemy[] enemies;
 Bullet[] bullets;
-int numberOfEnemies = 30;
+int numberOfEnemies = 40;
+int enemyDistanceLength = 30;
 float deltaTime;
 long time;
 float enemyShootCooldown;
@@ -31,28 +32,12 @@ boolean gameOver = false;
 public void setup()
 {
 	
-	frameRate(60);
+	frameRate(165);
 	textAlign(CENTER);
 	ellipseMode(CENTER);
 
 	player = new Player(400,850,30,200,100,150);
-
-	enemies = new Enemy[numberOfEnemies];
-	for (int i = 0; i < numberOfEnemies; ++i)
-	{
-		if(i < 10)
-		{
-		enemies[i] = new Enemy(50 + (i*50), height/6, 25,1);
-		}
-		if(i >= 10)
-		{			
-			enemies[i] = new Enemy(50 + ((i-10)*50), height/8, 25,2);
-		}
-		if(i >= 20)
-		{			
-			enemies[i] = new Enemy(50 + ((i-20)*50), height/12, 25,3);
-		}
-	}
+	spawnEnemies();
 
 	bullets = new Bullet[30];
 	float enemyShootCooldown = random(3,4);
@@ -76,23 +61,7 @@ public void draw()
 public void restartGame()
 {
 	player = new Player(400,850,30,200,100,150);
-
-	enemies = new Enemy[numberOfEnemies];
-	for (int i = 0; i < numberOfEnemies; ++i)
-	{
-		if(i < 10)
-		{
-		enemies[i] = new Enemy(50 + (i*50), height/6, 25,1);
-		}
-		if(i >= 10)
-		{			
-			enemies[i] = new Enemy(50 + ((i-10)*50), height/8, 25,2);
-		}
-		if(i >= 20)
-		{			
-			enemies[i] = new Enemy(50 + ((i-20)*50), height/12, 25,3);
-		}
-	}
+	spawnEnemies();
 
 	bullets = new Bullet[30];
 
@@ -138,6 +107,43 @@ public void gameOverScreen()
 	text(gameOverText, width/2, height/2);
 	textSize(20);
 	text(restartGameText, width/2, height/2 + 40);
+}
+
+public void spawnEnemies()
+{
+	enemies = new Enemy[numberOfEnemies];
+	for (int i = 0; i < numberOfEnemies; ++i)
+	{
+		if(i < 10)
+		{
+		enemies[i] = new Enemy(50 + (i*enemyDistanceLength), height/6, 25,1);
+		}
+		if(i >= 10)
+		{			
+			enemies[i] = new Enemy(50 + ((i-10)*enemyDistanceLength), height/8, 25,2);
+		}
+		if(i >= 20)
+		{			
+			enemies[i] = new Enemy(50 + ((i-20)*enemyDistanceLength), height/12, 25,3);
+		}
+	}
+	// Originalvärden för Enemies
+	/*enemies = new Enemy[numberOfEnemies];
+	for (int i = 0; i < numberOfEnemies; ++i)
+	{
+		if(i < 10)
+		{
+		enemies[i] = new Enemy(50 + (i*50), height/6, 25,1);
+		}
+		if(i >= 10)
+		{			
+			enemies[i] = new Enemy(50 + ((i-10)*50), height/8, 25,2);
+		}
+		if(i >= 20)
+		{			
+			enemies[i] = new Enemy(50 + ((i-20)*50), height/12, 25,3);
+		}
+	}*/
 }
 class Bullet extends GameObject
 {
@@ -266,8 +272,13 @@ class Enemy extends GameObject
 			for(int i = 0; i < enemies.length; ++i)
 			{
 				enemies[i].horizontalSpeed = enemies[i].horizontalSpeed * -1;
-				enemies[i].position.y = enemies[i].position.y + verticalSpeed;	
-			}				
+				//enemies[i].position.y = enemies[i].position.y + verticalSpeed;	
+			}	
+			// For loop skapad istället för rad 57
+			for (int i = 0; i < enemies.length; ++i)
+			{
+				enemies[i].position.y = enemies[i].position.y + verticalSpeed;				
+			}			
 		 	swapDirection = false;
 		}	
 		
@@ -275,7 +286,7 @@ class Enemy extends GameObject
 
 		if(enemyShootCooldown <= 0)
 		{
-			enemyShootCooldown = random(3,4);
+			enemyShootCooldown = random(1,2);
 			shootingEnemy = PApplet.parseInt(random(enemies.length));
 			enemyShoot();
 		}

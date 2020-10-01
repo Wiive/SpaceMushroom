@@ -54,8 +54,13 @@ class Enemy extends GameObject
 			for(int i = 0; i < enemies.length; ++i)
 			{
 				enemies[i].horizontalSpeed = enemies[i].horizontalSpeed * -1;
-				enemies[i].position.y = enemies[i].position.y + verticalSpeed;	
-			}				
+				//enemies[i].position.y = enemies[i].position.y + verticalSpeed;	
+			}	
+			// For loop skapad istället för rad 57
+			for (int i = 0; i < enemies.length; ++i)
+			{
+				enemies[i].position.y = enemies[i].position.y + verticalSpeed;				
+			}			
 		 	swapDirection = false;
 		}	
 		
@@ -63,7 +68,7 @@ class Enemy extends GameObject
 
 		if(enemyShootCooldown <= 0)
 		{
-			enemyShootCooldown = random(3,4);
+			enemyShootCooldown = random(1,2);
 			shootingEnemy = int(random(enemies.length));
 			enemyShoot();
 		}
