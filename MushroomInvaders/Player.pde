@@ -6,6 +6,7 @@ class Player extends GameObject
 	float quickTurnSpeed = 200;
 	float accelerationMultiplier = 2;
 	float deaccelerationMultiplier = 1.5;
+	PImage playerImage = loadImage("Player.png");
 
 
 	Player(float x, float y, int size,int value1, int value2, int value3)
@@ -52,8 +53,10 @@ class Player extends GameObject
 
 	void draw()
 	{
-		fill(objectColor);
-		ellipse(position.x, position.y, size, size);
+		//fill(objectColor);
+		//ellipse(position.x, position.y, size, size);
+		imageMode(CENTER);
+		image(playerImage, position.x, position.y,size, size);
   	}
 	
 	void ScreenWall()

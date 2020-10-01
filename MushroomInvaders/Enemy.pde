@@ -1,18 +1,22 @@
 class Enemy extends GameObject
 {
-	float horizontalSpeed = 80;
+	float horizontalSpeed = 50;
 	float verticalSpeed = 50;
 	boolean hitScreenWall;
 	boolean swapDirection;
 	int shootingEnemy;
 
 	int scoreValue;
+	PImage svampImage;
 	int scoreTier1 = 10;
 	int scoreTier2 = 20;
 	int scoreTier3 = 30;
-	color colorTier1 = color(0, 200, 0);
+/*	color colorTier1 = color(0, 200, 0);
 	color colorTier2 = color(200, 0, 0);
-	color colorTier3 = color(0, 0, 200);
+	color colorTier3 = color(0, 0, 200);*/
+	PImage svampImageTier1 = loadImage("Svamp1.png");
+	PImage svampImageTier2 = loadImage("Svamp2.png");
+	PImage svampImageTier3 = loadImage("Svamp3.png");
 
 	Enemy(float x, float y, int size, int tierType)
 	{
@@ -24,25 +28,23 @@ class Enemy extends GameObject
 		if (tierType == 1)
 		{
 			scoreValue = scoreTier1;
-			objectColor = colorTier1;
+			svampImage = svampImageTier1;
 		}
 		else if(tierType == 2)
 		{
 			scoreValue = scoreTier2;
-			objectColor = colorTier2;
+			svampImage = svampImageTier2;
 		}
 		else if(tierType == 3)
 		{
 			scoreValue = scoreTier3;
-			objectColor = colorTier3;
+			svampImage = svampImageTier3;
 		}
 	}
 
 	void update()
 	{
-		position.x = position.x + horizontalSpeed * deltaTime;
-		
-		if(position.x < size || position.x > width - size)
+		if(position.x + horizontalSpeed * deltaTime < size || position.x + horizontalSpeed * deltaTime > width - size)
 		{
 			hitScreenWall = true;
 			swapDirection = true;
@@ -63,7 +65,8 @@ class Enemy extends GameObject
 			}			
 		 	swapDirection = false;
 		}	
-		
+		position.x = position.x + horizontalSpeed * deltaTime;
+
 		checkCollision();
 
 		if(enemyShootCooldown <= 0)
@@ -76,8 +79,10 @@ class Enemy extends GameObject
 
 	void draw()
 	{
-		fill(objectColor);
-		ellipse(position.x, position.y, size, size);
+/*		fill(objectColor);
+		ellipse(position.x, position.y, size, size);*/
+		imageMode(CENTER);
+		image(svampImage, position.x, position.y, size, size);
 	}
 
 
@@ -100,7 +105,7 @@ class Enemy extends GameObject
 					}
 				}
 
-			if(enemies[i].position.y >= player.position.y)
+			if(enemies[i].position.y + player.size >= player.position.y)
 			{
 				gameOver = true;
 			}
@@ -115,7 +120,7 @@ class Enemy extends GameObject
      		{
 	        	if (bullets[j] == null)
 	        	{
-	         	 	bullets[j] = new Bullet(enemies[shootingEnemy].position.x, enemies[shootingEnemy].position.y, 10, "enemyBullet");
+	         	 	bullets[j] = new Bullet(enemies[shootingEnemy].position.x, enemies[shootingEnemy].position.y, 5, "enemyBullet");
 
 	        		break;
 	      		}	

@@ -2,6 +2,7 @@ boolean moveLeft;
 boolean moveRight;
 PVector inputVector;
 boolean resetButtonDown = false;
+float shootCooldown = 0.33;
 
 void keyPressed()
 {
@@ -10,20 +11,20 @@ void keyPressed()
     else if (keyCode == RIGHT || key == 'd')
       moveRight = true;
 
-     //Spawn new bullet it we press "space-bar"
-    if (keyPressed && key == 32) 
-    {  
-      //Find empty spot in array, create list.
-      for (int i = 0; i < bullets.length; i++)
-      {
-        if (bullets[i] == null)
+    if(shootCooldown <= 0){
+      if (keyPressed && key == 32) 
+      {  
+        for (int i = 0; i < bullets.length; i++)
         {
-          bullets[i] = new Bullet(player.position.x, player.position.y, 10, "playerBullet");
-          //we are done, break/quit the loop.
-          break;
+          if (bullets[i] == null)
+          {
+            bullets[i] = new Bullet(player.position.x, player.position.y, 5, "playerBullet");
+            shootCooldown = 0.33;
+            break;
+          }
         }
-      }
-    } 
+      } 
+    }
    
     if(gameOver)
     {

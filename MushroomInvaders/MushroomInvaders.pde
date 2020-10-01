@@ -1,7 +1,7 @@
 Player player;
 Enemy[] enemies;
 Bullet[] bullets;
-int numberOfEnemies = 40;
+int numberOfEnemies = 100;
 int enemyDistanceLength = 30;
 float deltaTime;
 long time;
@@ -12,6 +12,9 @@ String gameOverText = "GAME OVER";
 String restartGameText = "Press [R] to restart game";
 boolean gameOver = false;
 
+PImage backgroundImage;
+
+
 
 void setup()
 {
@@ -20,17 +23,19 @@ void setup()
 	textAlign(CENTER);
 	ellipseMode(CENTER);
 
-	player = new Player(400,850,30,200,100,150);
+	player = new Player(400,850,60,200,100,150);
 	spawnEnemies();
 
 	bullets = new Bullet[30];
 	float enemyShootCooldown = random(3,4);
+	backgroundImage = loadImage("Background.png");
+
 }
 
 void draw()
 {
-/*	textSize(28);
-	text(scoreText + score, width/2,30);*/
+	textSize(28);
+	text(scoreText + score, width/2,30);
 
 	if(gameOver)
 	{
@@ -42,9 +47,39 @@ void draw()
 	}	
 }
 
+void spawnEnemies()
+{
+	enemies = new Enemy[numberOfEnemies];
+
+	for (int i = 0; i < numberOfEnemies; ++i)
+	{
+		if(i < 20)
+		{
+		enemies[i] = new Enemy(50 + (i*enemyDistanceLength), height/4, 25,1);
+		}
+		if(i >= 20)
+		{
+		enemies[i] = new Enemy(50 + ((i-20)*enemyDistanceLength), height/4.8, 25,1);
+		}
+		if(i >= 40)
+		{			
+			enemies[i] = new Enemy(50 + ((i-40)*enemyDistanceLength), height/6, 25,2);
+		}
+		if(i >= 60)
+		{			
+			enemies[i] = new Enemy(50 + ((i-60)*enemyDistanceLength), height/8, 25,2);
+		}
+		if(i >= 80)
+		{			
+			enemies[i] = new Enemy(50 + ((i-80)*enemyDistanceLength), height/12, 25,3);
+		}
+	}
+}
+
+
 void restartGame()
 {
-	player = new Player(400,850,30,200,100,150);
+	player = new Player(400,850,60,200,100,150);
 	spawnEnemies();
 
 	bullets = new Bullet[30];
@@ -54,13 +89,14 @@ void restartGame()
 
 void gameScreen()
 {
-	background(0);
+	background(backgroundImage);
 	fill(255);
 	textSize(28);
 	text(scoreText + score, width/2,30);
 
 	long currentTime = millis();
 	enemyShootCooldown = enemyShootCooldown - deltaTime;
+	shootCooldown = shootCooldown - deltaTime;
 	
 	deltaTime = (currentTime - time);
 	deltaTime *= 0.001f;
@@ -91,41 +127,4 @@ void gameOverScreen()
 	text(gameOverText, width/2, height/2);
 	textSize(20);
 	text(restartGameText, width/2, height/2 + 40);
-}
-
-void spawnEnemies()
-{
-	enemies = new Enemy[numberOfEnemies];
-	for (int i = 0; i < numberOfEnemies; ++i)
-	{
-		if(i < 10)
-		{
-		enemies[i] = new Enemy(50 + (i*enemyDistanceLength), height/6, 25,1);
-		}
-		if(i >= 10)
-		{			
-			enemies[i] = new Enemy(50 + ((i-10)*enemyDistanceLength), height/8, 25,2);
-		}
-		if(i >= 20)
-		{			
-			enemies[i] = new Enemy(50 + ((i-20)*enemyDistanceLength), height/12, 25,3);
-		}
-	}
-	// Originalvärden för Enemies
-	/*enemies = new Enemy[numberOfEnemies];
-	for (int i = 0; i < numberOfEnemies; ++i)
-	{
-		if(i < 10)
-		{
-		enemies[i] = new Enemy(50 + (i*50), height/6, 25,1);
-		}
-		if(i >= 10)
-		{			
-			enemies[i] = new Enemy(50 + ((i-10)*50), height/8, 25,2);
-		}
-		if(i >= 20)
-		{			
-			enemies[i] = new Enemy(50 + ((i-20)*50), height/12, 25,3);
-		}
-	}*/
 }

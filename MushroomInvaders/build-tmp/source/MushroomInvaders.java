@@ -17,7 +17,7 @@ public class MushroomInvaders extends PApplet {
 Player player;
 Enemy[] enemies;
 Bullet[] bullets;
-int numberOfEnemies = 40;
+int numberOfEnemies = 100;
 int enemyDistanceLength = 30;
 float deltaTime;
 long time;
@@ -28,6 +28,9 @@ String gameOverText = "GAME OVER";
 String restartGameText = "Press [R] to restart game";
 boolean gameOver = false;
 
+PImage backgroundImage;
+
+
 
 public void setup()
 {
@@ -36,17 +39,19 @@ public void setup()
 	textAlign(CENTER);
 	ellipseMode(CENTER);
 
-	player = new Player(400,850,30,200,100,150);
+	player = new Player(400,850,60,200,100,150);
 	spawnEnemies();
 
 	bullets = new Bullet[30];
 	float enemyShootCooldown = random(3,4);
+	backgroundImage = loadImage("Background.png");
+
 }
 
 public void draw()
 {
-/*	textSize(28);
-	text(scoreText + score, width/2,30);*/
+	textSize(28);
+	text(scoreText + score, width/2,30);
 
 	if(gameOver)
 	{
@@ -58,9 +63,39 @@ public void draw()
 	}	
 }
 
+public void spawnEnemies()
+{
+	enemies = new Enemy[numberOfEnemies];
+
+	for (int i = 0; i < numberOfEnemies; ++i)
+	{
+		if(i < 20)
+		{
+		enemies[i] = new Enemy(50 + (i*enemyDistanceLength), height/4, 25,1);
+		}
+		if(i >= 20)
+		{
+		enemies[i] = new Enemy(50 + ((i-20)*enemyDistanceLength), height/4.8f, 25,1);
+		}
+		if(i >= 40)
+		{			
+			enemies[i] = new Enemy(50 + ((i-40)*enemyDistanceLength), height/6, 25,2);
+		}
+		if(i >= 60)
+		{			
+			enemies[i] = new Enemy(50 + ((i-60)*enemyDistanceLength), height/8, 25,2);
+		}
+		if(i >= 80)
+		{			
+			enemies[i] = new Enemy(50 + ((i-80)*enemyDistanceLength), height/12, 25,3);
+		}
+	}
+}
+
+
 public void restartGame()
 {
-	player = new Player(400,850,30,200,100,150);
+	player = new Player(400,850,60,200,100,150);
 	spawnEnemies();
 
 	bullets = new Bullet[30];
@@ -70,13 +105,14 @@ public void restartGame()
 
 public void gameScreen()
 {
-	background(0);
+	background(backgroundImage);
 	fill(255);
 	textSize(28);
 	text(scoreText + score, width/2,30);
 
 	long currentTime = millis();
 	enemyShootCooldown = enemyShootCooldown - deltaTime;
+	shootCooldown = shootCooldown - deltaTime;
 	
 	deltaTime = (currentTime - time);
 	deltaTime *= 0.001f;
@@ -107,43 +143,6 @@ public void gameOverScreen()
 	text(gameOverText, width/2, height/2);
 	textSize(20);
 	text(restartGameText, width/2, height/2 + 40);
-}
-
-public void spawnEnemies()
-{
-	enemies = new Enemy[numberOfEnemies];
-	for (int i = 0; i < numberOfEnemies; ++i)
-	{
-		if(i < 10)
-		{
-		enemies[i] = new Enemy(50 + (i*enemyDistanceLength), height/6, 25,1);
-		}
-		if(i >= 10)
-		{			
-			enemies[i] = new Enemy(50 + ((i-10)*enemyDistanceLength), height/8, 25,2);
-		}
-		if(i >= 20)
-		{			
-			enemies[i] = new Enemy(50 + ((i-20)*enemyDistanceLength), height/12, 25,3);
-		}
-	}
-	// Originalvärden för Enemies
-	/*enemies = new Enemy[numberOfEnemies];
-	for (int i = 0; i < numberOfEnemies; ++i)
-	{
-		if(i < 10)
-		{
-		enemies[i] = new Enemy(50 + (i*50), height/6, 25,1);
-		}
-		if(i >= 10)
-		{			
-			enemies[i] = new Enemy(50 + ((i-10)*50), height/8, 25,2);
-		}
-		if(i >= 20)
-		{			
-			enemies[i] = new Enemy(50 + ((i-20)*50), height/12, 25,3);
-		}
-	}*/
 }
 class Bullet extends GameObject
 {
@@ -218,19 +217,23 @@ class Bullet extends GameObject
 }
 class Enemy extends GameObject
 {
-	float horizontalSpeed = 80;
+	float horizontalSpeed = 50;
 	float verticalSpeed = 50;
 	boolean hitScreenWall;
 	boolean swapDirection;
 	int shootingEnemy;
 
 	int scoreValue;
+	PImage svampImage;
 	int scoreTier1 = 10;
 	int scoreTier2 = 20;
 	int scoreTier3 = 30;
-	int colorTier1 = color(0, 200, 0);
-	int colorTier2 = color(200, 0, 0);
-	int colorTier3 = color(0, 0, 200);
+/*	color colorTier1 = color(0, 200, 0);
+	color colorTier2 = color(200, 0, 0);
+	color colorTier3 = color(0, 0, 200);*/
+	PImage svampImageTier1 = loadImage("Svamp1.png");
+	PImage svampImageTier2 = loadImage("Svamp2.png");
+	PImage svampImageTier3 = loadImage("Svamp3.png");
 
 	Enemy(float x, float y, int size, int tierType)
 	{
@@ -242,25 +245,23 @@ class Enemy extends GameObject
 		if (tierType == 1)
 		{
 			scoreValue = scoreTier1;
-			objectColor = colorTier1;
+			svampImage = svampImageTier1;
 		}
 		else if(tierType == 2)
 		{
 			scoreValue = scoreTier2;
-			objectColor = colorTier2;
+			svampImage = svampImageTier2;
 		}
 		else if(tierType == 3)
 		{
 			scoreValue = scoreTier3;
-			objectColor = colorTier3;
+			svampImage = svampImageTier3;
 		}
 	}
 
 	public void update()
 	{
-		position.x = position.x + horizontalSpeed * deltaTime;
-		
-		if(position.x < size || position.x > width - size)
+		if(position.x + horizontalSpeed * deltaTime < size || position.x + horizontalSpeed * deltaTime > width - size)
 		{
 			hitScreenWall = true;
 			swapDirection = true;
@@ -281,7 +282,8 @@ class Enemy extends GameObject
 			}			
 		 	swapDirection = false;
 		}	
-		
+		position.x = position.x + horizontalSpeed * deltaTime;
+
 		checkCollision();
 
 		if(enemyShootCooldown <= 0)
@@ -294,8 +296,10 @@ class Enemy extends GameObject
 
 	public void draw()
 	{
-		fill(objectColor);
-		ellipse(position.x, position.y, size, size);
+/*		fill(objectColor);
+		ellipse(position.x, position.y, size, size);*/
+		imageMode(CENTER);
+		image(svampImage, position.x, position.y, size, size);
 	}
 
 
@@ -318,7 +322,7 @@ class Enemy extends GameObject
 					}
 				}
 
-			if(enemies[i].position.y >= player.position.y)
+			if(enemies[i].position.y + player.size >= player.position.y)
 			{
 				gameOver = true;
 			}
@@ -333,7 +337,7 @@ class Enemy extends GameObject
      		{
 	        	if (bullets[j] == null)
 	        	{
-	         	 	bullets[j] = new Bullet(enemies[shootingEnemy].position.x, enemies[shootingEnemy].position.y, 10, "enemyBullet");
+	         	 	bullets[j] = new Bullet(enemies[shootingEnemy].position.x, enemies[shootingEnemy].position.y, 5, "enemyBullet");
 
 	        		break;
 	      		}	
@@ -358,6 +362,7 @@ boolean moveLeft;
 boolean moveRight;
 PVector inputVector;
 boolean resetButtonDown = false;
+float shootCooldown = 0.33f;
 
 public void keyPressed()
 {
@@ -366,20 +371,20 @@ public void keyPressed()
     else if (keyCode == RIGHT || key == 'd')
       moveRight = true;
 
-     //Spawn new bullet it we press "space-bar"
-    if (keyPressed && key == 32) 
-    {  
-      //Find empty spot in array, create list.
-      for (int i = 0; i < bullets.length; i++)
-      {
-        if (bullets[i] == null)
+    if(shootCooldown <= 0){
+      if (keyPressed && key == 32) 
+      {  
+        for (int i = 0; i < bullets.length; i++)
         {
-          bullets[i] = new Bullet(player.position.x, player.position.y, 10, "playerBullet");
-          //we are done, break/quit the loop.
-          break;
+          if (bullets[i] == null)
+          {
+            bullets[i] = new Bullet(player.position.x, player.position.y, 5, "playerBullet");
+            shootCooldown = 0.33f;
+            break;
+          }
         }
-      }
-    } 
+      } 
+    }
    
     if(gameOver)
     {
@@ -428,6 +433,7 @@ class Player extends GameObject
 	float quickTurnSpeed = 200;
 	float accelerationMultiplier = 2;
 	float deaccelerationMultiplier = 1.5f;
+	PImage playerImage = loadImage("Player.png");
 
 
 	Player(float x, float y, int size,int value1, int value2, int value3)
@@ -474,8 +480,10 @@ class Player extends GameObject
 
 	public void draw()
 	{
-		fill(objectColor);
-		ellipse(position.x, position.y, size, size);
+		//fill(objectColor);
+		//ellipse(position.x, position.y, size, size);
+		imageMode(CENTER);
+		image(playerImage, position.x, position.y,size, size);
   	}
 	
 	public void ScreenWall()
