@@ -16,13 +16,16 @@ public class MushroomInvaders extends PApplet {
 
 Player player;
 Enemy[] enemies;
-Bullet[] bullets; 
+Bullet[] bullets;
 int numberOfEnemies = 30;
 float deltaTime;
 long time;
 float enemyShootCooldown;
 int score = 0;
 String scoreText = "Current Score: ";
+String gameOverText = "GAME OVER";
+String restartGameText = "Press [R] to restart game";
+boolean gameOver = false;
 
 
 public void setup()
@@ -57,7 +60,49 @@ public void setup()
 
 public void draw()
 {
+/*	textSize(28);
+	text(scoreText + score, width/2,30);*/
+
+	if(gameOver)
+	{
+		gameOverScreen();
+	}
+	else
+	{
+		gameScreen();
+	}	
+}
+
+public void restartGame()
+{
+	player = new Player(400,850,30,200,100,150);
+
+	enemies = new Enemy[numberOfEnemies];
+	for (int i = 0; i < numberOfEnemies; ++i)
+	{
+		if(i < 10)
+		{
+		enemies[i] = new Enemy(50 + (i*50), height/6, 25,1);
+		}
+		if(i >= 10)
+		{			
+			enemies[i] = new Enemy(50 + ((i-10)*50), height/8, 25,2);
+		}
+		if(i >= 20)
+		{			
+			enemies[i] = new Enemy(50 + ((i-20)*50), height/12, 25,3);
+		}
+	}
+
+	bullets = new Bullet[30];
+
+	score = 0;
+}
+
+public void gameScreen()
+{
 	background(0);
+	fill(255);
 	textSize(28);
 	text(scoreText + score, width/2,30);
 
@@ -83,6 +128,16 @@ public void draw()
 	}
 
 	time = currentTime;
+}
+
+public void gameOverScreen()
+{
+	background(0,0,0,100);
+	textSize(50);
+	fill(255);
+	text(gameOverText, width/2, height/2);
+	textSize(20);
+	text(restartGameText, width/2, height/2 + 40);
 }
 class Bullet extends GameObject
 {
@@ -130,7 +185,7 @@ class Bullet extends GameObject
         {
            bullets[i] = null;
         }
-        if(bullets[i].position.y > height)
+        else if(bullets[i].position.y > height)
         {
            bullets[i] = null;
         }
@@ -207,14 +262,11 @@ class Enemy extends GameObject
 		else hitScreenWall = false;
 
 		if(swapDirection)
-		{
-			
-			//print("Hit wall ");		
+		{					
 			for(int i = 0; i < enemies.length; ++i)
 			{
 				enemies[i].horizontalSpeed = enemies[i].horizontalSpeed * -1;
-				enemies[i].position.y = enemies[i].position.y + verticalSpeed;
-				//print(horizontalSpeed + " ");		
+				enemies[i].position.y = enemies[i].position.y + verticalSpeed;	
 			}				
 		 	swapDirection = false;
 		}	
@@ -226,8 +278,6 @@ class Enemy extends GameObject
 			enemyShootCooldown = random(3,4);
 			shootingEnemy = PApplet.parseInt(random(enemies.length));
 			enemyShoot();
-			print(" Shooting Enemy Index: " + shootingEnemy);
-			print(" Enemy Shoot Cooldown: " + enemyShootCooldown);
 		}
 	}
 
@@ -249,7 +299,6 @@ class Enemy extends GameObject
 					{
 						if (bullets[j].typeOfBullet == "playerBullet") 
 						{
-						print("DOM TRÄFFA");
 						bullets[j] = null;
 						enemies[i].horizontalSpeed = 0; 
 						enemies[i].position.y = -1000;
@@ -257,6 +306,11 @@ class Enemy extends GameObject
 						}
 					}
 				}
+
+			if(enemies[i].position.y >= player.position.y)
+			{
+				gameOver = true;
+			}
 		}
 	}
 
@@ -292,6 +346,7 @@ class GameObject
 boolean moveLeft;
 boolean moveRight;
 PVector inputVector;
+boolean resetButtonDown = false;
 
 public void keyPressed()
 {
@@ -314,6 +369,15 @@ public void keyPressed()
         }
       }
     } 
+   
+    if(gameOver)
+    {
+      if (resetButtonDown == false && key == 'r')
+      {
+      resetButtonDown = true;
+      restartGame();
+      }
+    }
 }
 
 public void keyReleased()
@@ -322,6 +386,12 @@ public void keyReleased()
       moveLeft = false;
     else if (keyCode == RIGHT || key == 'd')
       moveRight = false;
+
+    if (key == 'r') 
+    {
+    resetButtonDown = false;
+    gameOver = false;
+    }
 }
 
 public PVector input()
@@ -417,7 +487,7 @@ class Player extends GameObject
 						if (bullets[i].typeOfBullet == "enemyBullet") 
 						{					
 						bullets[i] = null;
-						print("GAME OVER");
+						gameOver = true;
 						}
 					}
 				}

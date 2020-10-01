@@ -1,12 +1,15 @@
 Player player;
 Enemy[] enemies;
-Bullet[] bullets; 
+Bullet[] bullets;
 int numberOfEnemies = 30;
 float deltaTime;
 long time;
 float enemyShootCooldown;
 int score = 0;
 String scoreText = "Current Score: ";
+String gameOverText = "GAME OVER";
+String restartGameText = "Press [R] to restart game";
+boolean gameOver = false;
 
 
 void setup()
@@ -41,7 +44,49 @@ void setup()
 
 void draw()
 {
+/*	textSize(28);
+	text(scoreText + score, width/2,30);*/
+
+	if(gameOver)
+	{
+		gameOverScreen();
+	}
+	else
+	{
+		gameScreen();
+	}	
+}
+
+void restartGame()
+{
+	player = new Player(400,850,30,200,100,150);
+
+	enemies = new Enemy[numberOfEnemies];
+	for (int i = 0; i < numberOfEnemies; ++i)
+	{
+		if(i < 10)
+		{
+		enemies[i] = new Enemy(50 + (i*50), height/6, 25,1);
+		}
+		if(i >= 10)
+		{			
+			enemies[i] = new Enemy(50 + ((i-10)*50), height/8, 25,2);
+		}
+		if(i >= 20)
+		{			
+			enemies[i] = new Enemy(50 + ((i-20)*50), height/12, 25,3);
+		}
+	}
+
+	bullets = new Bullet[30];
+
+	score = 0;
+}
+
+void gameScreen()
+{
 	background(0);
+	fill(255);
 	textSize(28);
 	text(scoreText + score, width/2,30);
 
@@ -67,4 +112,14 @@ void draw()
 	}
 
 	time = currentTime;
+}
+
+void gameOverScreen()
+{
+	background(0,0,0,100);
+	textSize(50);
+	fill(255);
+	text(gameOverText, width/2, height/2);
+	textSize(20);
+	text(restartGameText, width/2, height/2 + 40);
 }

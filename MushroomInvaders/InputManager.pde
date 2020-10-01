@@ -1,6 +1,7 @@
 boolean moveLeft;
 boolean moveRight;
 PVector inputVector;
+boolean resetButtonDown = false;
 
 void keyPressed()
 {
@@ -23,6 +24,15 @@ void keyPressed()
         }
       }
     } 
+   
+    if(gameOver)
+    {
+      if (resetButtonDown == false && key == 'r')
+      {
+      resetButtonDown = true;
+      restartGame();
+      }
+    }
 }
 
 void keyReleased()
@@ -31,6 +41,12 @@ void keyReleased()
       moveLeft = false;
     else if (keyCode == RIGHT || key == 'd')
       moveRight = false;
+
+    if (key == 'r') 
+    {
+    resetButtonDown = false;
+    gameOver = false;
+    }
 }
 
 PVector input()

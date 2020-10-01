@@ -50,14 +50,11 @@ class Enemy extends GameObject
 		else hitScreenWall = false;
 
 		if(swapDirection)
-		{
-			
-			//print("Hit wall ");		
+		{					
 			for(int i = 0; i < enemies.length; ++i)
 			{
 				enemies[i].horizontalSpeed = enemies[i].horizontalSpeed * -1;
-				enemies[i].position.y = enemies[i].position.y + verticalSpeed;
-				//print(horizontalSpeed + " ");		
+				enemies[i].position.y = enemies[i].position.y + verticalSpeed;	
 			}				
 		 	swapDirection = false;
 		}	
@@ -69,8 +66,6 @@ class Enemy extends GameObject
 			enemyShootCooldown = random(3,4);
 			shootingEnemy = int(random(enemies.length));
 			enemyShoot();
-			print(" Shooting Enemy Index: " + shootingEnemy);
-			print(" Enemy Shoot Cooldown: " + enemyShootCooldown);
 		}
 	}
 
@@ -92,7 +87,6 @@ class Enemy extends GameObject
 					{
 						if (bullets[j].typeOfBullet == "playerBullet") 
 						{
-						print("DOM TRÄFFA");
 						bullets[j] = null;
 						enemies[i].horizontalSpeed = 0; 
 						enemies[i].position.y = -1000;
@@ -100,6 +94,11 @@ class Enemy extends GameObject
 						}
 					}
 				}
+
+			if(enemies[i].position.y >= player.position.y)
+			{
+				gameOver = true;
+			}
 		}
 	}
 

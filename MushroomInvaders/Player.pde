@@ -76,7 +76,7 @@ class Player extends GameObject
 						if (bullets[i].typeOfBullet == "enemyBullet") 
 						{					
 						bullets[i] = null;
-						print("GAME OVER");
+						gameOver = true;
 						}
 					}
 				}

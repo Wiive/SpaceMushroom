@@ -44,7 +44,7 @@ class Bullet extends GameObject
         {
            bullets[i] = null;
         }
-        if(bullets[i].position.y > height)
+        else if(bullets[i].position.y > height)
         {
            bullets[i] = null;
         }
