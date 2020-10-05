@@ -9,35 +9,35 @@ class Player extends GameObject
 	PImage playerImage = loadImage("Player.png");
 
 
-	Player(float x, float y, int size,int value1, int value2, int value3)
+	Player(float x, float y, int size)
 	{
 		super(x,y,size);
 		position.x = x;
 		position.y = y;
 		this.size = size;
-		objectColor = color(value1, value2, value3);
+		
 		velocity = new PVector();
 	}
+
 
 	void update()
 	{
 		acceleration = input();
 		acceleration.mult(accelerationMultiplier * speed * deltaTime);
 
-		 //Quick turn
-        float dot = velocity.dot(acceleration); 
+		//Quick turn
+		float dot = velocity.dot(acceleration); 
 
-        if (dot < 0) 
-        {
-            acceleration.mult(quickTurnSpeed);
-        }
+		if (dot < 0) 
+		{
+			acceleration.mult(quickTurnSpeed);
+		}
 
 
 		if (acceleration.mag() == 0)
-	{
-		
-  		acceleration.x -= velocity.x * deaccelerationMultiplier * speed * deltaTime;
-  	}
+		{
+			acceleration.x -= velocity.x * deaccelerationMultiplier * speed * deltaTime;
+		}
 
 		velocity.add(acceleration);
 		velocity.limit(maxSpeed);
@@ -48,17 +48,18 @@ class Player extends GameObject
 		position.add(move);
 
 		ScreenWall();
+
 		checkCollision();
 	}
 
+
 	void draw()
 	{
-		//fill(objectColor);
-		//ellipse(position.x, position.y, size, size);
 		imageMode(CENTER);
 		image(playerImage, position.x, position.y,size, size);
-  	}
+	}
 	
+
 	void ScreenWall()
 	{
 		if (position.x < size)
@@ -70,20 +71,19 @@ class Player extends GameObject
 
 	void checkCollision()
 	{
-		
-			for(int i = 0; i < bullets.length; ++i)
-				if(bullets[i] != null)
+		for(int i = 0; i < bullets.length; ++i)
+		{
+			if(bullets[i] != null)
+			{
+				if(bulletCollision(player, bullets[i]))
 				{
-					if(bulletCollision(player, bullets[i]))
-					{
-						if (bullets[i].typeOfBullet == "enemyBullet") 
-						{					
+					if (bullets[i].typeOfBullet == "enemyBullet") 
+					{					
 						bullets[i] = null;
 						gameOver = true;
-						}
 					}
 				}
-		
+			}
+		}
 	}
-
 }

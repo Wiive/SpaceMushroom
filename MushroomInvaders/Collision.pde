@@ -1,17 +1,19 @@
- boolean bulletCollision(GameObject one, Bullet two)
- { 
-  int maxDistance = one.size/2 + two.size;
+ boolean bulletCollision(GameObject gameObject, Bullet bullet)
+{ 
+	int maxDistance = gameObject.size/2 + bullet.size;
 
-  if(abs(one.position.x - two.position.x) > maxDistance || abs(one.position.y - two.position.y) > maxDistance)
-  {
-    return false;
-  }
-  else if(dist(one.position.x, one.position.y, two.position.x, two.position.y) > maxDistance)
-  {
-    return false;
-  }
-  else
-  {
-    return true;
-  }
+	if(abs(gameObject.position.x - bullet.position.x) > maxDistance || abs(gameObject.position.y - bullet.position.y) > maxDistance)
+	{
+		return false;
+	}
+
+	else if(dist(gameObject.position.x, gameObject.position.y, bullet.position.x, bullet.position.y) > maxDistance)
+	{
+		return false;
+	}
+
+	else
+	{
+		return true;
+	}
 }

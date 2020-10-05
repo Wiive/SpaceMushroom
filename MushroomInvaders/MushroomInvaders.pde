@@ -1,19 +1,17 @@
 Player player;
 Enemy[] enemies;
-Bullet[] bullets;
+int enemyDistance = 30;
+float enemyShootCooldown;
 int numberOfEnemies = 100;
-int enemyDistanceLength = 30;
+Bullet[] bullets;
 float deltaTime;
 long time;
-float enemyShootCooldown;
 int score = 0;
 String scoreText = "Current Score: ";
 String gameOverText = "GAME OVER";
 String restartGameText = "Press [R] to restart game";
 boolean gameOver = false;
-
 PImage backgroundImage;
-
 
 
 void setup()
@@ -22,15 +20,17 @@ void setup()
 	frameRate(165);
 	textAlign(CENTER);
 	ellipseMode(CENTER);
-
-	player = new Player(400,850,60,200,100,150);
-	spawnEnemies();
-
-	bullets = new Bullet[30];
-	float enemyShootCooldown = random(3,4);
 	backgroundImage = loadImage("Background.png");
 
+	player = new Player(400,850,60);
+
+	spawnEnemies();
+	float enemyShootCooldown = random(3,4);
+
+	bullets = new Bullet[30];
+	
 }
+
 
 void draw()
 {
@@ -41,11 +41,13 @@ void draw()
 	{
 		gameOverScreen();
 	}
+
 	else
 	{
 		gameScreen();
 	}	
 }
+
 
 void spawnEnemies()
 {
@@ -55,37 +57,42 @@ void spawnEnemies()
 	{
 		if(i < 20)
 		{
-		enemies[i] = new Enemy(50 + (i*enemyDistanceLength), height/4, 25,1);
+		enemies[i] = new Enemy(50 + (i*enemyDistance), height/4, 25,1);
 		}
+
 		if(i >= 20)
 		{
-		enemies[i] = new Enemy(50 + ((i-20)*enemyDistanceLength), height/4.8, 25,1);
+		enemies[i] = new Enemy(50 + ((i-20)*enemyDistance), height/4.8, 25,1);
 		}
+
 		if(i >= 40)
 		{			
-			enemies[i] = new Enemy(50 + ((i-40)*enemyDistanceLength), height/6, 25,2);
+			enemies[i] = new Enemy(50 + ((i-40)*enemyDistance), height/6, 25,2);
 		}
+
 		if(i >= 60)
 		{			
-			enemies[i] = new Enemy(50 + ((i-60)*enemyDistanceLength), height/8, 25,2);
+			enemies[i] = new Enemy(50 + ((i-60)*enemyDistance), height/8, 25,2);
 		}
+
 		if(i >= 80)
 		{			
-			enemies[i] = new Enemy(50 + ((i-80)*enemyDistanceLength), height/12, 25,3);
+			enemies[i] = new Enemy(50 + ((i-80)*enemyDistance), height/12, 25,3);
 		}
 	}
 }
 
 
-void restartGame()
+void gameOverScreen()
 {
-	player = new Player(400,850,60,200,100,150);
-	spawnEnemies();
-
-	bullets = new Bullet[30];
-
-	score = 0;
+	background(0,0,0,100);
+	textSize(50);
+	fill(255);
+	text(gameOverText, width/2, height/2);
+	textSize(20);
+	text(restartGameText, width/2, height/2 + 40);
 }
+
 
 void gameScreen()
 {
@@ -113,18 +120,20 @@ void gameScreen()
 	for(int i = 0; i < bullets.length; ++i)
 	{
 		if(bullets[i] != null)
-		bullets[i].draw();
+		bullets[i].update();
 	}
 
 	time = currentTime;
 }
 
-void gameOverScreen()
+
+void restartGame()
 {
-	background(0,0,0,100);
-	textSize(50);
-	fill(255);
-	text(gameOverText, width/2, height/2);
-	textSize(20);
-	text(restartGameText, width/2, height/2 + 40);
+	player = new Player(400,850,60);
+
+	spawnEnemies();
+
+	bullets = new Bullet[30];
+
+	score = 0;
 }
