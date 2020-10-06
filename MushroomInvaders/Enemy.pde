@@ -1,16 +1,15 @@
 class Enemy extends GameObject
 {
-
 	float horizontalSpeed = 50;
 	float verticalSpeed = 50;
 	boolean hitScreenWall;
 	boolean swapDirection;
 	int shootingEnemy;
-	int scoreValue;
-	PImage enemyImage;
+	int scoreValue;	
 	int scoreTier1 = 10;
 	int scoreTier2 = 20;
 	int scoreTier3 = 30;
+	PImage enemyImage;
 	PImage enemyImageTier1 = loadImage("Svamp1.png");
 	PImage enemyImageTier2 = loadImage("Svamp2.png");
 	PImage enemyImageTier3 = loadImage("Svamp3.png");
@@ -28,11 +27,13 @@ class Enemy extends GameObject
 			scoreValue = scoreTier1;
 			enemyImage = enemyImageTier1;
 		}
+
 		else if(tierType == 2)
 		{
 			scoreValue = scoreTier2;
 			enemyImage = enemyImageTier2;
 		}
+
 		else if(tierType == 3)
 		{
 			scoreValue = scoreTier3;
@@ -42,11 +43,13 @@ class Enemy extends GameObject
 
 	void update()
 	{
-		if(position.x + horizontalSpeed * deltaTime < size || position.x + horizontalSpeed * deltaTime > width - size)
+		if(position.x + horizontalSpeed * deltaTime < size
+			|| position.x + horizontalSpeed * deltaTime > width - size)
 		{
 			hitScreenWall = true;
 			swapDirection = true;
 		}
+
 		else hitScreenWall = false;
 
 		if(swapDirection)
@@ -117,7 +120,8 @@ class Enemy extends GameObject
 		{
 			if (bullets[i] == null)
 			{
-				bullets[i] = new Bullet(enemies[shootingEnemy].position.x, enemies[shootingEnemy].position.y, 5, "enemyBullet");
+				bullets[i] = new Bullet(enemies[shootingEnemy].position.x,
+										enemies[shootingEnemy].position.y, 5, "enemyBullet");
 
 				break;
 			}	

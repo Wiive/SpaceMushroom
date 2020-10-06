@@ -28,7 +28,6 @@ void setup()
 	float enemyShootCooldown = random(3,4);
 
 	bullets = new Bullet[30];
-	
 }
 
 
@@ -102,11 +101,11 @@ void gameScreen()
 	text(scoreText + score, width/2,30);
 
 	long currentTime = millis();
-	enemyShootCooldown = enemyShootCooldown - deltaTime;
-	shootCooldown = shootCooldown - deltaTime;
-	
 	deltaTime = (currentTime - time);
 	deltaTime *= 0.001f;
+
+	enemyShootCooldown = enemyShootCooldown - deltaTime;
+	shootCooldown = shootCooldown - deltaTime;
 
 	player.update();
 	player.draw();
@@ -123,7 +122,26 @@ void gameScreen()
 		bullets[i].update();
 	}
 
+	if(allEnemiesDead(score))
+	{
+		restartGame();
+	}
+
 	time = currentTime;
+}
+
+
+boolean allEnemiesDead(int score)
+{
+	if(score == 1800)
+	{
+		return true;
+	}
+	
+	else
+	{
+		return false;
+	}
 }
 
 

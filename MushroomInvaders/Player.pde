@@ -33,7 +33,6 @@ class Player extends GameObject
 			acceleration.mult(quickTurnSpeed);
 		}
 
-
 		if (acceleration.mag() == 0)
 		{
 			acceleration.x -= velocity.x * deaccelerationMultiplier * speed * deltaTime;
@@ -63,9 +62,14 @@ class Player extends GameObject
 	void ScreenWall()
 	{
 		if (position.x < size)
+		{
 			position.x = size;
+		}
+
 		else if (position.x > width - size)
+		{
 			position.x = width -size;	
+		}
 	}
 
 

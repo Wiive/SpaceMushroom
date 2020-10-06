@@ -41,7 +41,15 @@ class Bullet extends GameObject
 			{
 				draw();
 
-				removeBullet(bullets[i]);
+				if(bullets[i].position.y < 0)
+					{
+						bullets[i] = null;
+					}
+
+				else if(bullets[i].position.y > height)
+					{
+						bullets[i] = null;
+					}
 			}
 		}
 	}
@@ -51,19 +59,5 @@ class Bullet extends GameObject
 	{
 		fill(objectColor);
 		rect(position.x, position.y, size, size*3);
-	}
-
-
-	void removeBullet(Bullet bullet)
-	{
-		if(bullet.position.y < 0)
-		{
-			bullet = null;
-		}
-
-		else if(bullet.position.y > height)
-		{
-			bullet = null;
-		}
 	}
 }

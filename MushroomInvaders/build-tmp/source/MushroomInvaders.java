@@ -44,7 +44,6 @@ public void setup()
 	float enemyShootCooldown = random(3,4);
 
 	bullets = new Bullet[30];
-	
 }
 
 
@@ -118,11 +117,11 @@ public void gameScreen()
 	text(scoreText + score, width/2,30);
 
 	long currentTime = millis();
-	enemyShootCooldown = enemyShootCooldown - deltaTime;
-	shootCooldown = shootCooldown - deltaTime;
-	
 	deltaTime = (currentTime - time);
 	deltaTime *= 0.001f;
+
+	enemyShootCooldown = enemyShootCooldown - deltaTime;
+	shootCooldown = shootCooldown - deltaTime;
 
 	player.update();
 	player.draw();
@@ -139,7 +138,26 @@ public void gameScreen()
 		bullets[i].update();
 	}
 
+	if(allEnemiesDead(score))
+	{
+		restartGame();
+	}
+
 	time = currentTime;
+}
+
+
+public boolean allEnemiesDead(int score)
+{
+	if(score == 1800)
+	{
+		return true;
+	}
+	
+	else
+	{
+		return false;
+	}
 }
 
 
@@ -196,7 +214,15 @@ class Bullet extends GameObject
 			{
 				draw();
 
-				removeBullet(bullets[i]);
+				if(bullets[i].position.y < 0)
+					{
+						bullets[i] = null;
+					}
+
+				else if(bullets[i].position.y > height)
+					{
+						bullets[i] = null;
+					}
 			}
 		}
 	}
@@ -207,31 +233,19 @@ class Bullet extends GameObject
 		fill(objectColor);
 		rect(position.x, position.y, size, size*3);
 	}
-
-
-	public void removeBullet(Bullet bullet)
-	{
-		if(bullet.position.y < 0)
-		{
-			bullet = null;
-		}
-
-		else if(bullet.position.y > height)
-		{
-			bullet = null;
-		}
-	}
 }
  public boolean bulletCollision(GameObject gameObject, Bullet bullet)
 { 
 	int maxDistance = gameObject.size/2 + bullet.size;
 
-	if(abs(gameObject.position.x - bullet.position.x) > maxDistance || abs(gameObject.position.y - bullet.position.y) > maxDistance)
+	if(abs(gameObject.position.x - bullet.position.x) > maxDistance
+		|| abs(gameObject.position.y - bullet.position.y) > maxDistance)
 	{
 		return false;
 	}
 
-	else if(dist(gameObject.position.x, gameObject.position.y, bullet.position.x, bullet.position.y) > maxDistance)
+	else if(dist(gameObject.position.x,	gameObject.position.y,
+			bullet.position.x, bullet.position.y) > maxDistance)
 	{
 		return false;
 	}
@@ -243,17 +257,16 @@ class Bullet extends GameObject
 }
 class Enemy extends GameObject
 {
-
 	float horizontalSpeed = 50;
 	float verticalSpeed = 50;
 	boolean hitScreenWall;
 	boolean swapDirection;
 	int shootingEnemy;
-	int scoreValue;
-	PImage enemyImage;
+	int scoreValue;	
 	int scoreTier1 = 10;
 	int scoreTier2 = 20;
 	int scoreTier3 = 30;
+	PImage enemyImage;
 	PImage enemyImageTier1 = loadImage("Svamp1.png");
 	PImage enemyImageTier2 = loadImage("Svamp2.png");
 	PImage enemyImageTier3 = loadImage("Svamp3.png");
@@ -271,11 +284,13 @@ class Enemy extends GameObject
 			scoreValue = scoreTier1;
 			enemyImage = enemyImageTier1;
 		}
+
 		else if(tierType == 2)
 		{
 			scoreValue = scoreTier2;
 			enemyImage = enemyImageTier2;
 		}
+
 		else if(tierType == 3)
 		{
 			scoreValue = scoreTier3;
@@ -285,11 +300,13 @@ class Enemy extends GameObject
 
 	public void update()
 	{
-		if(position.x + horizontalSpeed * deltaTime < size || position.x + horizontalSpeed * deltaTime > width - size)
+		if(position.x + horizontalSpeed * deltaTime < size
+			|| position.x + horizontalSpeed * deltaTime > width - size)
 		{
 			hitScreenWall = true;
 			swapDirection = true;
 		}
+
 		else hitScreenWall = false;
 
 		if(swapDirection)
@@ -360,7 +377,8 @@ class Enemy extends GameObject
 		{
 			if (bullets[i] == null)
 			{
-				bullets[i] = new Bullet(enemies[shootingEnemy].position.x, enemies[shootingEnemy].position.y, 5, "enemyBullet");
+				bullets[i] = new Bullet(enemies[shootingEnemy].position.x,
+										enemies[shootingEnemy].position.y, 5, "enemyBullet");
 
 				break;
 			}	
@@ -373,6 +391,7 @@ class GameObject
 	PVector velocity;
 	int size;
 	int objectColor;
+
 
 	GameObject(float x, float y, int size)
 	{
@@ -498,7 +517,6 @@ class Player extends GameObject
 			acceleration.mult(quickTurnSpeed);
 		}
 
-
 		if (acceleration.mag() == 0)
 		{
 			acceleration.x -= velocity.x * deaccelerationMultiplier * speed * deltaTime;
@@ -528,9 +546,14 @@ class Player extends GameObject
 	public void ScreenWall()
 	{
 		if (position.x < size)
+		{
 			position.x = size;
+		}
+
 		else if (position.x > width - size)
+		{
 			position.x = width -size;	
+		}
 	}
 
 
